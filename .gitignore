@@ -1,0 +1,10 @@
+var/
+__pycache__/
+*.pyc
+web/dist/
+web/node_modules/
+web/src/data.json
+web/.data-app-offline/
+
+.DS_Store
+docs/reference.png

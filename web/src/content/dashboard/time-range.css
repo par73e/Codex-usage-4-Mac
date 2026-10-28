@@ -1,0 +1,65 @@
+.usage-range-control { position:relative; padding-bottom:20px; }
+.usage-range-sr { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip:rect(0,0,0,0); white-space:nowrap; border:0; }
+.usage-range-heading { display:flex; align-items:center; gap:12px; font-size:12px; color:var(--secondary); margin-bottom:10px; }
+.usage-range-mode { color:var(--accent); font-size:11px; }
+.usage-range-line { display:flex; gap:14px; align-items:center; }
+.usage-range-line .usage-range-input { flex:1; min-width:0; font-variant-numeric:tabular-nums; }
+.usage-range-zone { display:flex; align-items:center; gap:10px; font-size:12px; color:var(--secondary); }
+.usage-range-zone select { max-width:210px; height:42px; padding:0 11px; border-radius:8px; border:1px solid var(--border-strong); background:var(--control); color:var(--text); font:inherit; }
+.usage-range-help { display:flex; justify-content:space-between; gap:12px; font-size:11px; color:var(--secondary); margin-top:11px; }
+.usage-range-panel { display:flex; background:var(--surface-raised); color:var(--text); font-variant-numeric:tabular-nums; }
+.usage-range-shortcuts { width:230px; flex:none; padding:15px 10px; border-right:1px solid var(--border); }
+.usage-range-section-title,.usage-range-recent summary { font-size:11px; color:var(--secondary); padding:3px 9px 8px; }
+.usage-range-preset-list { display:grid; grid-template-columns:1fr 1fr; gap:2px; }
+.usage-range-preset-list button { white-space:nowrap; }
+.usage-range-shortcuts button { display:block; width:100%; text-align:left; background:none; border:0; border-radius:6px; color:var(--text); cursor:pointer; font:inherit; font-size:12px; padding:8px 9px; }
+.usage-range-shortcuts button:hover,.usage-range-shortcuts button.is-active { background:var(--control-hover); color:var(--accent); }
+.usage-range-shortcuts button:focus-visible { outline:2px solid var(--accent); outline-offset:-2px; }
+.usage-range-recent { margin-top:12px; padding-top:11px; border-top:1px solid var(--border); }
+.usage-range-recent summary { cursor:pointer; }
+.usage-range-recent>div { max-height:185px; overflow:auto; scrollbar-color:var(--border-strong) transparent; }
+.usage-range-recent button span { display:block; font-size:11px; }
+.usage-range-recent button small { display:block; color:var(--secondary); font-size:10px; margin-top:4px; line-height:1.45; }
+.usage-range-calendar { min-width:0; }
+.usage-range-endpoints { display:flex; gap:8px; padding:10px 12px; border-bottom:1px solid var(--border); }
+.usage-range-endpoints button { flex:1; display:flex; align-items:center; gap:8px; min-width:0; padding:8px 10px; border:1px solid var(--border); border-radius:7px; background:var(--control); color:var(--text); font:inherit; font-size:12px; cursor:pointer; }
+.usage-range-endpoints button[aria-pressed="true"] { border-color:var(--accent); color:var(--accent); }
+.usage-range-endpoints button span { font-size:11px; color:var(--secondary); }
+.usage-range-endpoints button strong { font-size:12px; font-weight:500; }
+.usage-date-endpoint { position:relative; cursor:grab; touch-action:none; }
+.usage-date-handle { position:absolute; bottom:-7px; height:12px; min-width:12px; padding:0 2px; border-radius:3px; line-height:12px; font-size:8px; background:var(--accent); color:var(--accent-foreground); cursor:grab; touch-action:none; }
+.usage-date-handle-0 { left:-3px; }
+.usage-date-handle-1 { right:-3px; }
+.usage-range-control[data-endpoint-dragging] .usage-range-calendar { cursor:grabbing; user-select:none; }
+.usage-range-drag-invalid { color:var(--negative)!important; }
+.usage-range-panel-hint { padding:2px 0; color:var(--secondary); font-size:11px; }
+.usage-range-footer { padding:8px 0; line-height:1.6; }
+.usage-range-confirm { display:block; margin:8px 0 0 auto; border:0; border-radius:6px; padding:7px 12px; font:inherit; font-size:12px; color:var(--accent-foreground); background:var(--accent); cursor:pointer; }
+.usage-range-error { margin:10px 0 0; font-size:12px; color:var(--negative); }
+.usage-range-popup { z-index:50; max-width:calc(100vw - 32px); }
+@media (max-width:800px) {
+  .usage-range-panel { flex-direction:column; }
+  .usage-range-shortcuts { width:100%; border-right:0; border-bottom:1px solid var(--border); padding:9px 10px; }
+  .usage-range-preset-list { grid-template-columns:repeat(4,1fr); }
+  .usage-range-recent { margin-top:5px; padding-top:5px; }
+  .usage-range-recent>div { max-height:82px; display:flex; gap:4px; }
+  .usage-range-recent button { width:190px; flex:none; }
+}
+@media (max-width:650px) {
+  .usage-range-popup { position:fixed!important; inset:64px 12px auto!important; transform:none!important; max-height:calc(100dvh - 80px); overflow:auto; scrollbar-color:var(--border-strong) transparent; }
+  .usage-range-line { flex-wrap:wrap; gap:10px; }
+  .usage-range-line .usage-range-input { width:100%; flex:auto; }
+  .usage-range-zone { width:100%; justify-content:space-between; }
+  .usage-range-zone select { max-width:none; width:calc(100% - 40px); }
+  .usage-range-help { flex-wrap:wrap; gap:5px; }
+}
+@media (max-width:480px) {
+  .usage-range-popup .ant-picker-datetime-panel { flex-direction:column; }
+  .usage-range-popup .ant-picker-date-panel { width:100%; }
+  .usage-range-popup .ant-picker-time-panel { width:100%; border-inline-start:0; border-top:1px solid var(--border); }
+  .usage-range-popup .ant-picker-time-panel .ant-picker-content { height:110px; }
+  .usage-range-popup .ant-picker-panel-container,.usage-range-popup .ant-picker-panel-layout,.usage-range-calendar { width:100%; }
+  .usage-range-popup .ant-picker-panel { width:100%; }
+  .usage-range-preset-list { grid-template-columns:repeat(4,minmax(0,1fr)); }
+  .usage-range-shortcuts button { font-size:11px; padding:7px 5px; }
+}

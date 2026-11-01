@@ -173,12 +173,11 @@ class Handler(SimpleHTTPRequestHandler):
             raise
 
 def main():
-    parser=argparse.ArgumentParser();parser.add_argument('--port',type=int,default=8765);parser.add_argument('--log-root',type=Path,default=Path.home()/'.codex');parser.add_argument('--prepare-only',action='store_true');parser.add_argument('--skip-build',action='store_true');parser.add_argument('--poll-interval',type=float,default=2);args=parser.parse_args()
-    if not 0.25<=args.poll_interval<=60:parser.error('--poll-interval 必须在 0.25 到 60 秒之间')
+    parser=argparse.ArgumentParser();parser.add_argument('--port',type=int,default=8765);parser.add_argument('--log-root',type=Path,default=Path.home()/'.codex');parser.add_argument('--prepare-only',action='store_true');parser.add_argument('--skip-build',action='store_true');args=parser.parse_args()
     engine=Engine(args.log_root,PROJECT/'var/usage.sqlite')
     server=None
     if not args.prepare_only:
-        try:server=Server(('127.0.0.1',args.port),engine,args.poll_interval)
+        try:server=Server(('127.0.0.1',args.port),engine)
         except OSError:
             print(f'端口 {args.port} 已被使用。如果本程序已经启动，请打开 http://127.0.0.1:{args.port}，或使用 --port 选择其他端口。',flush=True)
             return
@@ -187,8 +186,8 @@ def main():
         (PROJECT/'var/reviewed.json').write_text(json.dumps(export_snapshot(engine,write=True),ensure_ascii=False));return
     if not args.skip_build:build_dashboard(engine)
     print(f'打开 http://127.0.0.1:{args.port}',flush=True)
-    server.sync.checked_at=status['updated_at'];server.sync.start()
-    print(f'自动同步已开启，每 {args.poll_interval:g} 秒读取新增日志；网页自动更新，无需 GPT。',flush=True)
+    server.sync.checked_at=status['updated_at']
+    print('手动同步模式：点击页面刷新按钮读取新增日志。',flush=True)
     try:server.serve_forever()
     except KeyboardInterrupt:pass
     finally:server.sync.stop();server.server_close()

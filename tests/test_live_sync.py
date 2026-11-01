@@ -83,6 +83,26 @@ class LiveSyncTest(unittest.TestCase):
         self.assertEqual(self.sync.snapshot()['queries']['usage']['rows'], [])
         self.assertEqual(self.engine.status['file_count'], 0)
 
+    def test_manual_mode_indexes_only_when_requested(self):
+        server = Server(('127.0.0.1', 0), self.engine, interval=0.02)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        def stop():
+            server.shutdown(); server.server_close(); thread.join()
+        self.addCleanup(stop)
+        base = 'http://127.0.0.1:' + str(server.server_address[1])
+        self.append(usage('manual-new'))
+        time.sleep(0.1)
+        with urllib.request.urlopen(base + '/api/v1/status', timeout=2) as response:
+            status = json.load(response)
+        self.assertFalse(status['auto_sync'])
+        self.assertEqual(status['record_count'], 1)
+        request = urllib.request.Request(base + '/api/v1/index/refresh', data=b'{}')
+        with urllib.request.urlopen(request, timeout=2) as response:
+            self.assertEqual(json.load(response)['record_count'], 2)
+        with urllib.request.urlopen(base + '/api/v1/snapshot', timeout=2) as response:
+            self.assertEqual(len(json.load(response)['queries']['usage']['rows']), 2)
+
     def test_http_auto_snapshot_and_manual_sync(self):
         server = Server(('127.0.0.1', 0), self.engine, interval=0.02)
         thread = threading.Thread(target=server.serve_forever, daemon=True)

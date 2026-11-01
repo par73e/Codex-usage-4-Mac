@@ -146,7 +146,7 @@ export function DashboardContent() {
     if (value) setApplied(a => ({ ...a, end: localMinute(new Date(Date.now() + 60000), a.timezone) }));
   };
   return <article className="usage-workspace">
-    <section className="usage-topline"><div><h1>Token 用量</h1><p>按时间、会话和模型查看本地使用记录</p></div><div className="usage-sync"><span role="status" className={localRefresh?.error ? "usage-sync-error" : ""}>{localRefresh?.error ? "同步中断，将自动重试" : localRefresh?.connected ? "自动同步中 · 每 2 秒检查" : "正在连接本机服务…"}</span><Button onClick={() => void localRefresh?.refresh()} disabled={!localRefresh || localRefresh.busy}>{localRefresh?.busy ? "正在同步…" : "立即同步"}</Button></div></section>
+    <section className="usage-topline"><div><h1>Token 用量</h1><p>按时间、会话和模型查看本地使用记录</p></div><div className="usage-sync"><span role="status" className={localRefresh?.error ? "usage-sync-error" : ""}>{localRefresh?.error ? "同步中断，请手动重试" : localRefresh?.connected ? "手动同步 · 点击刷新读取最新日志" : "正在连接本机服务…"}</span><Button onClick={() => void localRefresh?.refresh()} disabled={!localRefresh || localRefresh.busy}>{localRefresh?.busy ? "正在同步…" : "立即同步"}</Button></div></section>
     {localRefresh?.error && <p className="usage-error" role="status">{localRefresh.error}。仍显示最近一次成功读取的数据。</p>}
     <section className="usage-filter-surface" aria-label="时间与用量筛选">
       <TimeRangePicker value={applied} followNow={followNow} relativeKey={relativeKey} onApply={applyTimeRange} />

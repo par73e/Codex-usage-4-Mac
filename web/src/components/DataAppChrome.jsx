@@ -279,7 +279,7 @@ function DataAppRefreshControl({ generatedAt, getActionHref, published, schedule
   }, [open]);
 
   if (localRefresh) return <button type="button" className="freshness freshness-button dashboard-refresh-trigger"
-    aria-label="立即同步本机日志" title="后端自动读取日志；点击可立即同步" disabled={localRefresh.busy}
+    aria-label="立即同步本机日志" title="点击读取并同步本机日志" disabled={localRefresh.busy}
     onClick={() => void localRefresh.refresh()}>
     <Icon name={localRefresh.busy ? "spinner" : "refresh"} size={16} />
     <span><ReviewedFreshness generatedAt={generatedAt} /></span>

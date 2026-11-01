@@ -45,7 +45,7 @@ export function useLiveUsage(initialSnapshot, enabled) {
         if (mounted.current) setState({ connected: true, busy: false, error: "", checkedAt: status.checked_at, interval: status.poll_interval });
       } catch (error) {
         if (mounted.current) setState(s => ({ ...s, connected: false, busy: false,
-          error: error.name === "AbortError" ? "本机服务响应超时，将自动重试" : "同步中断：" + error.message + "；将自动重试" }));
+          error: error.name === "AbortError" ? "本机服务响应超时，请手动重试" : "同步中断：" + error.message + "；请手动重试" }));
       }
     })();
     pending.current = request;
@@ -55,15 +55,8 @@ export function useLiveUsage(initialSnapshot, enabled) {
   useEffect(() => {
     if (!enabled) return;
     mounted.current = true;
-    let timer, active = true;
-    const tick = async () => {
-      if (document.visibilityState !== "hidden") await synchronize();
-      if (active) timer = setTimeout(tick, 2000);
-    };
-    const visible = () => { if (document.visibilityState === "visible") void synchronize(); };
-    void tick();
-    document.addEventListener("visibilitychange", visible);
-    return () => { active = false; mounted.current = false; clearTimeout(timer); document.removeEventListener("visibilitychange", visible); };
+    void synchronize();
+    return () => { mounted.current = false; };
   }, [enabled, synchronize]);
 
   const refresh = useCallback(() => synchronize(true), [synchronize]);

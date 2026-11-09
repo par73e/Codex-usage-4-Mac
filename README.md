@@ -2,6 +2,13 @@
 
 在 Mac 上查看本机 Codex 日志里的 Token 用量和额度快照。Python 后端只在本机监听，读取现存日志、生成 SQLite 索引，浏览器展示图表。不调用模型 API，不上传日志。统计不等同于整个账户的官方用量。
 
+## macOS 和 Windows 配置注意事项
+
+- **macOS**：目前已在开发者的 Mac 上运行。首次在其他 Mac 部署仍需验证；请按下面的步骤检查 Python、Node、Data 插件、前端依赖和可选的 `zstd`。`start.command` 是 macOS 启动脚本，终端窗口需要保持打开。Intel 和 Apple Silicon 上的依赖安装位置可能不同，程序会从 PATH 或常见 Homebrew 目录寻找 `zstd`。
+- **Windows**：当前版本没有在 Windows 上测试，也不能保证直接运行。启动代码固定寻找用户目录下 `.cache/codex-runtimes/codex-primary-runtime/dependencies/node/bin/node`；Windows 通常使用 `node.exe`，并且 Codex 和 Data 插件的安装位置可能不同。需要适配并验证 Node、插件路径和前端构建后才能正常启动；安装系统 Node 并不能自动解决固定路径问题。`start.command` 也不能作为原生 Windows 的双击启动器。
+- Windows 若继续适配，需要检查 Python 3.9+、npm 和 Data 插件；默认日志根目录基于当前用户的 `~/.codex`，具体路径应以实际安装为准。读取压缩日志需要可在 PATH 找到的 `zstd`。Python 的时区数据库如果缺失，还需安装 `tzdata`。路径、压缩日志、图表构建和手动同步都需要在目标机器上实际测试。
+- 项目依赖 Codex 附带的 Node 和 Data 插件构建工具，不是独立安装包。切勿把 `var/`、`web/src/data.json`、`web/dist/` 或个人 Codex 日志上传到公开仓库；它们可能包含个人使用记录。
+
 ## 新 Mac 安装与启动
 
 目前是源码项目，不是独立安装包。首次在另一台 Mac 上安装尚未实测；以下步骤说明当前代码的实际依赖。需要能访问自己的 Codex 日志，并安装 Codex 桌面应用及其 Data 插件。插件的获取和可用性取决于 Codex 环境，仓库本身不包含该构建工具。
@@ -113,7 +120,7 @@ python3 -m backend.app --port 8765
 ## 项目结构
 
 - `backend/engine.py`：增量索引、去重、配置关联、时间分桶、会话与模型聚合。
-- `backend/app.py`：仅回环地址 HTTP 服务、后台自动扫描、同版本快照和查询接口。前端构建只在启动时执行。
+- `backend/app.py`：仅回环地址 HTTP 服务、手动扫描、同版本快照和查询接口。前端构建只在启动时执行。
 - `backend/logfiles.py`：发现普通／压缩日志，调用本机 zstd 流式读取并校验解码完成。
 - `backend/legacy_intervals.py`：旧累计快照校验、去重、粗时间／继承基线识别、观测区间与整数时长分配。
 - `web/src/content/dashboard/TotalUsageChart.jsx`：所有模型合计图、合计用量表及原始旧区间表。
